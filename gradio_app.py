@@ -6,8 +6,10 @@ import argparse
 from datetime import datetime
 
 CONFIG_PATH = Path("configs/unet/stage2.yaml")
+GRADIO_CONFIG = Path("config.yaml")
 CHECKPOINT_PATH = Path("checkpoints/latentsync_unet.pt")
 
+gradio_config = OmegaConf.load(GRADIO_CONFIG)
 
 def process_video(
     video_path,
@@ -147,4 +149,8 @@ with gr.Blocks(title="LatentSync demo") as demo:
     )
 
 if __name__ == "__main__":
-    demo.launch(inbrowser=True, share=True)
+    demo.launch(
+        server_name=gradio_config.server_name,
+        server_port=gradio_config.server_port,
+        auth=tuple(gradio_config.auth)
+    )
